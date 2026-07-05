@@ -46,9 +46,20 @@ def delete_expenses_for_date(expense_date):
     with get_db_cursor(commit=True) as cursor:
         cursor.execute("DELETE FROM expenses WHERE expense_date = %s", (expense_date,))
 
+def fetch_expense_summary(start_date, end_date):
+    with get_db_cursor() as cursor:
+        cursor.execute(
+            "SELECT category, SUM(amount) as total  FROM expenses WHERE expense_date BETWEEN %s AND %s GROUP BY category ",
+            (start_date, end_date)
+        )
+        data = cursor.fetchall()
+        for record in data:
+            print(record)
+
 if __name__ == "__main__":
-    # fetch_all_records()
-    # fetch_expenses_for_date("2024-08-01")
-    # insert_expense("2024-08-20", 300, "Food", "Panipuri")
-    delete_expenses_for_date("2024-08-20")
-    fetch_expenses_for_date("2024-08-20")
+    #fetch_all_records()
+    #fetch_expenses_for_date("2024-08-01")
+    #delete_expenses_for_date("2024-08-20")
+    #insert_expense("2024-08-20", 300, "Food", "Panipuri")
+    #fetch_expenses_for_date("2024-08-20")
+    fetch_expense_summary("2024-08-01","2024-08-05")
