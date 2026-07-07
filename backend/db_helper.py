@@ -34,6 +34,7 @@ def fetch_expenses_for_date(expense_date):
         expenses = cursor.fetchall()
         for expense in expenses:
             print(expense)
+        return expenses
 
 def insert_expense(expense_date, amount, category, notes):
     with get_db_cursor(commit=True) as cursor:
@@ -55,6 +56,7 @@ def fetch_expense_summary(start_date, end_date):
         data = cursor.fetchall()
         for record in data:
             print(record)
+        return data
 
 if __name__ == "__main__":
     #fetch_all_records()
