@@ -65,7 +65,20 @@ def fetch_expense_summary(start_date, end_date):
         for record in data:
             print(record)
         return data
-
+    
+def fetch_monthly_summary(start_month, end_month):
+    with get_db_cursor() as cursor:
+        cursor.execute(r"""
+            SELECT DATE_FORMAT(expense_date, '%Y-%m') AS month, 
+                   SUM(amount) AS total 
+            FROM expenses 
+            WHERE DATE_FORMAT(expense_date, '%Y-%m') BETWEEN %s AND %s
+            GROUP BY month 
+            ORDER BY month
+        """, (start_month, end_month))
+        data = cursor.fetchall()
+        return data
+    
 if __name__ == "__main__":
     #fetch_all_records()
     fetch_expenses_for_date("2024-08-01")

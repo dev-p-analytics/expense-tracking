@@ -45,3 +45,19 @@ def get_analytics(date_range: DateRange):
             'percentage': percentage
         }
     return breakdown
+
+@app.get("/analytics/monthly")
+def get_monthly_analytics(start_month: str = "2024-08", end_month: str = "2024-12"):
+    data = db_helper.fetch_monthly_summary(start_month, end_month)
+    if data is None:
+        raise HTTPException(status_code=500, detail='Failed to retrieve monthly summary')
+
+    total = sum([row['total'] for row in data])
+    breakdown = {}
+    for row in data:
+        percentage = (row['total'] / total) * 100 if total != 0 else 0
+        breakdown[row['month']] = {
+            'total': row['total'],
+            'percentage': percentage
+        }
+    return breakdown
